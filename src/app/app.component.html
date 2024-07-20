@@ -1,0 +1,202 @@
+<div class="container">
+  <div class="row">
+      <div class="col-md-6 offset-md-3">.
+          <form [formGroup]="signUpForm" (ngSubmit)="OnSignUp()">
+              <div class="form-group">
+                  <label for="userName">UserName*</label>
+                  <input formControlName="userName" type="text" class="form-control" id="userName">
+
+                  <span class="text-danger"
+                  *ngIf="signUpForm.controls['userName'].touched && signUpForm.controls['userName'].hasError('required')">
+                      Username is a required field.
+                  </span>
+
+                  <ng-container *ngIf="signUpForm.controls['userName'].dirty">
+                      <span class="text-danger" *ngIf="f['userName'].hasError('noSpaceBar')">
+                          {{getUsername.errors?.['noSpaceBar']}}
+                      </span>
+                      <span class="text-danger"
+                  *ngIf="signUpForm.controls['userName'].hasError('minlength')">
+                      Minimum length of Username should be
+                      {{signUpForm.controls['userName'].errors?.['minlength'].requiredLength}}
+                      and the actual lenght is
+                      {{signUpForm.controls['userName'].errors?.['minlength'].actualLength}}
+                  </span>
+
+                  <span class="text-danger"
+                  *ngIf=" getUsername.hasError('maxlength')">
+                      Maximum length of Username should be
+                      {{getUsername.errors?.['maxlength'].requiredLength}}
+                      and the actual lenght is
+                      {{getUsername.errors?.['maxlength'].actualLength}}
+                  </span>
+
+                  <span class="text-danger"
+                  *ngIf="getUsername.hasError('pattern')">
+                   Username is Invalid
+                  </span>
+                  </ng-container>
+                  
+              </div>
+              <div class="form-group">
+                  <label for="email">Email*</label>
+                  <input formControlName="email" type="text" class="form-control" id="email">
+
+                  <div *ngIf="f['email'].pending" class="spinner-border text-primary" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                    <small class="text-success" *ngIf="f['email'].valid">
+                      this email id is available
+                    </small>
+                    <span class="text-danger" *ngIf="f['email'].hasError('emailExistErr')">
+                      {{f['email'].errors?.['emailExistErr']}}
+                    </span>
+                  <span class="text-danger" *ngIf="f['email'].touched && f['email'].hasError('required') ">
+                      Email is a Mandatory Field.
+                  </span>
+                  <span class="text-danger" *ngIf="f['email'].dirty && f['email'].hasError('pattern')">
+                      Invalid email pattern
+                  </span>
+              </div>  
+
+              <div class="form-group">
+                  <label for="empId"> Emp ID </label>
+                  <input type="text" placeholder="E456" class="form-control" formControlName="empId">
+
+                  <span class="text-danger" *ngIf="f['empId'].touched && f['empId'].hasError('required') ">
+                    Emp id is a Mandatory Field.
+                </span>
+
+                <span class="text-danger" *ngIf="f['empId'].dirty && f['empId'].hasError('invalidexp')">
+                  {{f['empId'].errors?.['invalidexp']}}
+                </span>
+              </div>
+
+              <div class="form-group">
+                  <h5>Gender*</h5>
+
+                     <ng-container *ngFor="let gender of gendersArr">
+                      <label [for]="gender">
+                          <input type="radio" [value]="gender" formControlName="gender" name="gender" [id]="gender">
+                           {{gender | titlecase}}
+                      </label>
+                  </ng-container>
+              </div>
+              <div formArrayName="skills">
+                  <h5>Add Skills</h5>
+                  <div class="row" *ngFor="let skill of skillsFormArr.controls; let i = index">
+                      <div class="col-md-10">
+                          <input type="text" [formControlName]="i" class="form-control mb-2">
+                      </div>
+                      <div class="col-md-2" *ngIf="i > 0">
+                          <button
+                          (click)="onSkillRemove(i)"
+                          class="btn btn-outline-danger btn-sm">Remove</button>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col">
+                          <button 
+                          *ngIf="skillsFormArr.length < 5, else noSkillMore"
+                          [disabled]="skillsFormArr.invalid"
+                          (click)="onSkillAdd()"
+                          type="button" class="btn btn-outline-info btn-sm">Add skill</button>
+
+                          <ng-template #noSkillMore>
+                              <span class="text-warning">
+                                  you can add max 5 skills
+                              </span>
+                          </ng-template>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="row">
+
+                  <div class="col-md-6" formGroupName="currentAddress">
+                      <h5>Current Address</h5>
+                      <div class="form-group">
+                          <label for="country">Country</label>
+                          <select class="form-control" formControlName="country"  id="country">
+                              <option value="">Select Country</option>
+                              <option [value]="country.Country" *ngFor="let country of countryArr">
+                                  {{country.Country}}
+                              </option>
+                          </select>
+                      </div>
+
+                      <div class="form-group">
+                          <label for="state">State</label>
+                          <input type="text" class="form-control" formControlName="state"  id="state">
+                         
+                      </div>
+                      <div class="form-group">
+                          <label for="city">City</label>
+                          <input type="text" class="form-control" formControlName="city"  id="city">
+                             
+                      </div>
+                      <div class="form-group">
+                          <label for="zipcode">zipcode</label>
+                          <input type="text" class="form-control" formControlName="zipcode"  id="zipcode">
+                              
+                        
+                      </div>
+                  </div>
+
+                  <div class="col-md-6" formGroupName="permanentAddress">
+                      <h5>Permanent Address</h5>
+                      <div class="form-group">
+                          <label for="country">Country</label>
+                          <select class="form-control" formControlName="country"  id="country">
+                              <option value="">Select Country</option>
+                              <option [value]="country.Country" *ngFor="let country of countryArr">
+                                  {{country.Country}}
+                              </option>
+                          </select>
+                      </div>
+
+                      <div class="form-group">
+                          <label for="state">State</label>
+                          <input type="text" class="form-control" formControlName="state"  id="state">
+                         
+                      </div>
+                      <div class="form-group">
+                          <label for="city">City</label>
+                          <input type="text" class="form-control" formControlName="city"  id="city">
+                             
+                      </div>
+                      <div class="form-group">
+                          <label for="zipcode">zipcode</label>
+                          <input type="text" class="form-control" formControlName="zipcode"  id="zipcode">
+                              
+                        
+                      </div>
+                  </div>
+                  
+                  <div class="col-12">
+                      <label for="isAddSame">
+                          <input type="checkbox" formControlName="isAddSame" id="isAddSame">permanent and Current address are same
+                      </label>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label for="password">Password</label>  
+                  <input formControlName="password" type="text" class="form-control">
+              </div>
+              <div class="form-group">
+                  <label for="password">ConfirmPassword</label>  
+                  <input formControlName="confirmPassword" type="text" class="form-control">
+              </div>
+
+              <span class="text-danger" *ngIf="f['password'].value !== f['confirmPassword'].value">
+                  Password and ConfirmPassword must be same
+              </span>
+              <button 
+              [disabled]="signUpForm.invalid"
+              class="btn btn-sm btn-primary btn-block">Sign Up</button> 
+          </form>
+         
+      </div>
+  </div>
+</div>
